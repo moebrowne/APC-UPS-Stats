@@ -1,4 +1,4 @@
-# APCUPSStats
+# APC UPS Statistics
 
 A simple shell tool that generates graphable data from the apcupsd status file
 

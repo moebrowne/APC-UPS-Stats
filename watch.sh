@@ -1,5 +1,8 @@
 #!/bin/sh
 
-inotifywait -m --timefmt '%d/%m/%y %H:%M' --format '%T %w %f' /var/log/apcupsd.status | while read date time dir file; do
-  echo "$date $time $dir $file"
+#STATUS_FILE=/var/log/apcupsd.status
+STATUS_FILE=./apcupsd.status
+
+inotifywait -e modify -m "$STATUS_FILE" | while read data; do
+  echo "$data"
 done

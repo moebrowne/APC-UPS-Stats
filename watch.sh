@@ -44,6 +44,9 @@ inotifywait -e modify -m "$STATUS_FILE" | while read data; do
 
 	echo "$data $HASH"
 
+	# Convert the date string to a UNIX timestamp
+	STATUS_DATA['DATE']=$(date --date="${STATUS_DATA['DATE']}" +%s)
+
 	# Show all the data
 	for k in "${!STATUS_DATA[@]}"; do
 		echo "$k => ${STATUS_DATA[$k]}"

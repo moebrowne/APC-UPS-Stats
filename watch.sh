@@ -13,39 +13,40 @@ STATUS_DATA_FIELDS=('DATE' 'STATUS' 'LINEV' 'OUTPUTV')
 
 inotifywait -e modify -m "$STATUS_FILE" | while read data; do
 
-  # Check if the file actually changed contents
-  HASH=$(hashFile "$STATUS_FILE")
-  if [ "$HASH" = "$STATUS_FILE_HASH" ]; then
-    continue;
-  fi
+	# Check if the file actually changed contents
+	HASH=$(hashFile "$STATUS_FILE")
+	if [ "$HASH" = "$STATUS_FILE_HASH" ]; then
+		continue;
+	fi
 
-  # Update the status file hash
-  STATUS_FILE_HASH="$HASH"
+	# Update the status file hash
+	STATUS_FILE_HASH="$HASH"
 
-  # Get the contents of the file
-  STATUS_DATA_RAW=$(cat "$STATUS_FILE")
+	# Get the contents of the file
+	STATUS_DATA_RAW=$(cat "$STATUS_FILE")
 
-  # Get all the requested fields
-  while read line; do
-    for field in "${STATUS_DATA_FIELDS[@]}"; do
-      regex="^$field[[:space:]]*: (.*)$"
-      [[ $line =~ $regex ]]
+	# Get all the requested fields
+	while read line; do
+		for field in "${STATUS_DATA_FIELDS[@]}"; do
+			regex="^$field[[:space:]]*: (.*)$"
+			[[ $line =~ $regex ]]
 
-      if [[ ${BASH_REMATCH[@]} == '' ]]; then
-          # Nothing matched the regex
-          continue
-      fi
+			if [[ ${BASH_REMATCH[@]} == '' ]]; then
+				# Nothing matched the regex
+				continue
+			fi
 
-      # Store the value
-      STATUS_DATA[$field]=${BASH_REMATCH[1]}
+			# Store the value
+			STATUS_DATA[$field]=${BASH_REMATCH[1]}
 
-    done
-  done < "$STATUS_FILE"
+		done
+	done < "$STATUS_FILE"
 
-  echo "$data $HASH"
+	echo "$data $HASH"
 
-  # Show all the data
-  for k in "${!STATUS_DATA[@]}"; do
-    echo "$k => ${STATUS_DATA[$k]}"
-  done | column -t -s '=>'
+	# Show all the data
+	for k in "${!STATUS_DATA[@]}"; do
+		echo "$k => ${STATUS_DATA[$k]}"
+	done | column -t -s '=>'
+
 done

@@ -14,6 +14,7 @@ inotifywait -e modify -m "$STATUS_FILE" | while read data; do
     continue;
   fi
 
+  # Update the status file hash
   STATUS_FILE_HASH="$HASH"
 
   echo "$data $HASH"

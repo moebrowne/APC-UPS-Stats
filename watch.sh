@@ -74,6 +74,7 @@ inotifywait -e modify -m "$STATUS_FILE" | while read data; do
 	mysql --user="$SQL_USER" --password="$SQL_PASS" "$SQL_DB_NAME" -e "$SQLQuery"
 
 	# Generate a JSON file
+	STATUS_DATA_JSON=''
     for key in "${!STATUS_DATA[@]}"; do
 		STATUS_DATA_JSON="$STATUS_DATA_JSON\"$key\": \"${STATUS_DATA[$key]}\","
 	done

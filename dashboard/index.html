@@ -324,7 +324,6 @@
 		$.ajax('dashboard/data.php', {
 			dataType: 'json',
 			complete: function(data) {
-				console.log(data);
 				var load = new Chart($("#load")[0].getContext("2d")).Line(data.responseJSON, {
 					pointHitDetectionRadius: 6,
 					scaleOverride: true,

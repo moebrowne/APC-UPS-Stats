@@ -15,7 +15,11 @@
 		console.log('WS: connected');
 	});
 
-</script>
+	socket.on('data', function(data) {
+		console.log(data);
+	});
+
+</script>a
 
 </body>
 </html>

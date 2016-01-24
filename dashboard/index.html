@@ -321,12 +321,18 @@
 			datasetFill : false
 		});
 
-		var load = new Chart($("#load")[0].getContext("2d")).Line(lineChartData, {
-			pointHitDetectionRadius: 6,
-			scaleOverride: true,
-			scaleStepWidth: 10,
-			scaleStartValue: 0,
-			scaleSteps: 10
+		$.ajax('dashboard/data.php', {
+			dataType: 'json',
+			complete: function(data) {
+				console.log(data);
+				var load = new Chart($("#load")[0].getContext("2d")).Line(data.responseJSON, {
+					pointHitDetectionRadius: 6,
+					scaleOverride: true,
+					scaleStepWidth: 10,
+					scaleStartValue: 0,
+					scaleSteps: 10
+				});
+			}
 		});
 
 		var batteryCharge = new Chart($("#batteryCharge")[0].getContext("2d")).Line(batteryChargeData, {

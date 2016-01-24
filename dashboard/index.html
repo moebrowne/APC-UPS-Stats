@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>UPS Monitor</title>
+</head>
+<body>
+
+<script src="/node_modules/socket.io-client/socket.io.js"></script>
+
+<script>
+	var socket = io('//:3000');
+
+	socket.on('connect', function() {
+		console.log('WS: connected');
+	});
+
+</script>
+
+</body>
+</html>

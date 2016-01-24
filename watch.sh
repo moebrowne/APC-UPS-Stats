@@ -6,6 +6,11 @@
 STATUS_FILE=./apcupsd.status
 STATUS_FILE_HASH=$(hashFile "$STATUS_FILE")
 
+SQL_USER='APCUPSStats'
+SQL_PASS='bm6+h7%w_gn!4'
+SQL_DB_NAME='APCUPS'
+SQL_TABLE_NAME='stats'
+
 declare -A STATUS_DATA
 declare -a STATUS_DATA_FIELDS
 
@@ -46,6 +51,24 @@ inotifywait -e modify -m "$STATUS_FILE" | while read data; do
 
 	# Convert the date string to a UNIX timestamp
 	STATUS_DATA['DATE']=$(date --date="${STATUS_DATA['DATE']}" +%s)
+
+	# Generate a MySQL query to store the data
+	SQLFieldList=''
+	SQLValueList=''
+	for k in "${!STATUS_DATA[@]}"; do
+		SQLFieldList="\`$k\`,$SQLFieldList"
+		SQLValueList="'${STATUS_DATA[$k]}',$SQLValueList"
+	done
+
+	# Trim the trailing commas
+	SQLFieldList=${SQLFieldList::-1}
+	SQLValueList=${SQLValueList::-1}
+
+	SQLQuery="INSERT INTO $SQL_DB_NAME.$SQL_TABLE_NAME ($SQLFieldList) VALUES ($SQLValueList)"
+
+	echo "SQL EXEC: $SQLQuery"
+
+	mysql --user="$SQL_USER" --password="$SQL_PASS" "$SQL_DB_NAME" -e "$SQLQuery"
 
 	# Show all the data
 	for k in "${!STATUS_DATA[@]}"; do

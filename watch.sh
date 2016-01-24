@@ -51,6 +51,9 @@ inotifywait -e modify -m "$STATUS_FILE" | while read data; do
 
 	# Convert the date string to a UNIX timestamp
 	STATUS_DATA['DATE']=$(date --date="${STATUS_DATA['DATE']}" +%s)
+	STATUS_DATA['XONBATT']=$(date --date="${STATUS_DATA['XONBATT']}" +%s)
+	STATUS_DATA['XOFFBATT']=$(date --date="${STATUS_DATA['XOFFBATT']}" +%s)
+	STATUS_DATA['LASTSTEST']=$(date --date="${STATUS_DATA['LASTSTEST']}" +%s)
 
 	# Generate a MySQL query to store the data
 	SQLFieldList=''

@@ -64,53 +64,6 @@
 				<div class="col-sm-12">
 					<div class="chart-wrapper">
 						<div class="chart-title">
-							UPS Time
-						</div>
-						<div class="chart-stage">
-							<canvas class="graph" height="175" width="270"></canvas>
-						</div>
-						<div class="chart-notes">
-							How long the UPS can supply the current load, and shutdown limit
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="chart-wrapper">
-						<div class="chart-title">
-							Internal Temperature
-						</div>
-						<div class="chart-stage">
-							<canvas class="graph" height="175" width="270"></canvas>
-						</div>
-						<div class="chart-notes">
-							The internal temperature of the UPS
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="chart-wrapper">
-						<div class="chart-title">
-							Line In Voltage
-						</div>
-						<div class="chart-stage">
-							<canvas class="graph" height="175" width="270"></canvas>
-						</div>
-						<div class="chart-notes">
-							The mains voltage into the UPS
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="chart-wrapper">
-						<div class="chart-title">
 							Self Test
 						</div>
 						<div class="chart-stage">
@@ -129,13 +82,13 @@
 				<div class="col-sm-12">
 					<div class="chart-wrapper">
 						<div class="chart-title">
-							Line Out Voltage
+							Internal Temperature (C)
 						</div>
 						<div class="chart-stage">
 							<canvas class="graph" height="175" width="270"></canvas>
 						</div>
 						<div class="chart-notes">
-							The mains voltage out of the UPS
+							The internal temperature of the UPS in degrees C
 						</div>
 					</div>
 				</div>
@@ -144,13 +97,13 @@
 				<div class="col-sm-12">
 					<div class="chart-wrapper">
 						<div class="chart-title">
-							Battery Charge
+							UPS Time
 						</div>
 						<div class="chart-stage">
 							<canvas class="graph" height="175" width="270"></canvas>
 						</div>
 						<div class="chart-notes">
-							The percentage the battery is charged to, and shutdown limit
+							How long the UPS can supply the current load, and shutdown limit
 						</div>
 					</div>
 				</div>
@@ -167,8 +120,37 @@
 							Up since: 2015-12-12 17:41:08 +0000<br>
 							Serial Number: AS0837140969<br>
 						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Line In/Out Voltage (V)
+						</div>
+						<div class="chart-stage">
+							<canvas id="lineVoltages" class="graph" height="175" width="270"></canvas>
+						</div>
 						<div class="chart-notes">
-							How long the UPS can supply the current load, and shutdown limit
+							The mains voltage in and out of the UPS
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Battery Charge (%)
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							How charged the battery currently is
 						</div>
 					</div>
 				</div>
@@ -202,7 +184,52 @@
 <script src="/node_modules/chart.js/Chart.min.js"></script>
 <script>
 
-	var randomScalingFactor = function(){ return Math.round(Math.random()*50)+24};
+	var randomScalingFactor = function(){ return Math.round((Math.random()+230)*10)/10};
+
+	var lineVoltageData = {
+		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
+		datasets : [
+			{
+				label: "Line In",
+				fillColor : "rgba(220,220,220,0.2)",
+				strokeColor : "rgba(220,220,220,1)",
+				pointColor : "rgba(220,220,220,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				label: "Line Out",
+				fillColor : "rgba(220,220,220,0.2)",
+				strokeColor : "rgba(220,220,220,1)",
+				pointColor : "rgba(220,220,220,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				fillColor : "rgba(151,187,205,0)",
+				strokeColor : "rgba(255,187,205,1)",
+				pointColor : "rgba(255,187,205,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(151,187,205,1)",
+				data : [253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253]
+			},
+			{
+				fillColor : "rgba(151,187,205,0)",
+				strokeColor : "rgba(151,255,205,1)",
+				pointColor : "rgba(151,255,205,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(151,187,205,1)",
+				data : [208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208]
+			}
+		]
+	};
+	var randomScalingFactor = function(){ return Math.round(Math.random()*20)+24};
 	var lineChartData = {
 		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
 		datasets : [
@@ -215,26 +242,6 @@
 				pointHighlightFill : "#fff",
 				pointHighlightStroke : "rgba(220,220,220,1)",
 				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			},
-			{
-				label: "Upper Range",
-				fillColor : "rgba(151,187,205,0)",
-				strokeColor : "rgba(255,187,205,1)",
-				pointColor : "rgba(255,187,205,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70]
-			},
-			{
-				label: "Lower Range",
-				fillColor : "rgba(151,187,205,0)",
-				strokeColor : "rgba(151,255,205,1)",
-				pointColor : "rgba(151,255,205,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15]
 			}
 		]
 	};
@@ -243,14 +250,23 @@
 		Chart.defaults.global.animation = false;
 		Chart.defaults.global.responsive = true;
 		Chart.defaults.global.maintainAspectRatio = true;
-		var ctx = $("canvas.graph");
+		Chart.defaults.global.datasetFill = false;
+
+		var ctx = $("canvas.graph").not('#lineVoltages');
 		new Chart(ctx[0].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
 		new Chart(ctx[1].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
 		new Chart(ctx[2].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
 		new Chart(ctx[3].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
 		new Chart(ctx[4].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
-		new Chart(ctx[5].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
-		new Chart(ctx[6].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+
+		var lineVoltages = new Chart($("#lineVoltages")[0].getContext("2d")).Line(lineVoltageData, {
+			pointHitDetectionRadius: 6,
+			scaleOverride: true,
+			scaleStepWidth: 5,
+			scaleStartValue: 205,
+			scaleSteps: 10,
+			multiTooltipTemplate: "<%if (label){%><%=label%>: <%=value%><%}%>",
+		});
 	});
 </script>
 

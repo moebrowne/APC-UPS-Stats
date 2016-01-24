@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>UPS Monitor</title>
+	<link rel="stylesheet" type="text/css" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" type="text/css" href="/dashboard/css/keen-dashboard.css" />
+</head>
+<body class="application">
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<div class="navbar-brand">APC UPS Monitor</div>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<li><a href="/dashboard">UPS01</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Current Load (%)
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							How much load is the UPS currently under
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Mains Frequency (Hz)
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							The frequency of the mains line in
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							UPS Time
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							How long the UPS can supply the current load, and shutdown limit
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Internal Temperature
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							The internal temperature of the UPS
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Line In Voltage
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							The mains voltage into the UPS
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Self Test
+						</div>
+						<div class="chart-stage">
+							Currently NOT running a self test<br>
+							Last test: 2016-01-09 16:49:48 +0000
+						</div>
+						<div class="chart-notes">
+							A self test is run every 14 days
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Line Out Voltage
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							The mains voltage out of the UPS
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							Battery Charge
+						</div>
+						<div class="chart-stage">
+							<canvas class="graph" height="175" width="270"></canvas>
+						</div>
+						<div class="chart-notes">
+							The percentage the battery is charged to, and shutdown limit
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="chart-wrapper">
+						<div class="chart-title">
+							UPS Details
+						</div>
+						<div class="chart-stage">
+							Firmware: 651.18.I USB FW:7.3<br>
+							Version: 3.14.12 (29 March 2014) redhat<br>
+							Up since: 2015-12-12 17:41:08 +0000<br>
+							Serial Number: AS0837140969<br>
+						</div>
+						<div class="chart-notes">
+							How long the UPS can supply the current load, and shutdown limit
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr>
+
+<p class="small text-muted">Theme built with &#9829; by <a href="https://keen.io">Keen IO</a></p>
+
+</div>
+
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/node_modules/socket.io-client/socket.io.js"></script>
+
+<script>
+	var socket = io('//:3000');
+
+	socket.on('connect', function() {
+		console.log('WS: connected');
+	});
+
+	socket.on('data', function(data) {
+		console.log(data);
+	});
+
+</script>
+
+
+<script src="/node_modules/chart.js/Chart.min.js"></script>
+<script>
+
+	var randomScalingFactor = function(){ return Math.round(Math.random()*50)+24};
+	var lineChartData = {
+		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
+		datasets : [
+			{
+				label: "My First dataset",
+				fillColor : "rgba(220,220,220,0.2)",
+				strokeColor : "rgba(220,220,220,1)",
+				pointColor : "rgba(220,220,220,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				label: "Upper Range",
+				fillColor : "rgba(151,187,205,0)",
+				strokeColor : "rgba(255,187,205,1)",
+				pointColor : "rgba(255,187,205,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(151,187,205,1)",
+				data : [70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70,70]
+			},
+			{
+				label: "Lower Range",
+				fillColor : "rgba(151,187,205,0)",
+				strokeColor : "rgba(151,255,205,1)",
+				pointColor : "rgba(151,255,205,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(151,187,205,1)",
+				data : [15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15]
+			}
+		]
+	};
+
+	$(function(){
+		Chart.defaults.global.animation = false;
+		Chart.defaults.global.responsive = true;
+		Chart.defaults.global.maintainAspectRatio = true;
+		var ctx = $("canvas.graph");
+		new Chart(ctx[0].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+		new Chart(ctx[1].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+		new Chart(ctx[2].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+		new Chart(ctx[3].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+		new Chart(ctx[4].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+		new Chart(ctx[5].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+		new Chart(ctx[6].getContext("2d")).Line(lineChartData, {pointHitDetectionRadius: 6, datasetFill : false});
+	});
+</script>
+
+</body>
+</html>

@@ -165,6 +165,7 @@
 
 <script src="/node_modules/jquery/dist/jquery.min.js"></script>
 <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/dashboard/js/date.format.js"></script>
 <script src="/node_modules/socket.io-client/socket.io.js"></script>
 
 <script>
@@ -176,6 +177,8 @@
 
 	socket.on('data', function(data) {
 		console.log(data);
+		var date = new Date(data.DATE * 1000).format('Hi');
+		loadChart.addData([parseInt(data.LOADPCT,10)], date);
 	});
 
 </script>
@@ -311,6 +314,8 @@
 		]
 	};
 
+
+	var loadChart;
 	$(function(){
 		Chart.defaults.global.animation = false;
 		Chart.defaults.global.responsive = true;
@@ -320,11 +325,10 @@
 			pointHitDetectionRadius: 6,
 			datasetFill : false
 		});
-
 		$.ajax('dashboard/data.php', {
 			dataType: 'json',
 			complete: function(data) {
-				var load = new Chart($("#load")[0].getContext("2d")).Line(data.responseJSON, {
+				loadChart = new Chart($("#load")[0].getContext("2d")).Line(data.responseJSON, {
 					pointHitDetectionRadius: 6,
 					scaleOverride: true,
 					scaleStepWidth: 10,

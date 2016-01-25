@@ -178,6 +178,7 @@
 	socket.on('data', function(data) {
 		console.log(data);
 		var date = new Date(data.DATE * 1000).format('Hi');
+		loadChart.removeData();
 		loadChart.addData([parseInt(data.LOADPCT,10)], date);
 	});
 

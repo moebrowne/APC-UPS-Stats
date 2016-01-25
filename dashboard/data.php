@@ -10,7 +10,7 @@ try {
 $data = [];
 $labels = [];
 
-foreach($dbh->query('SELECT DATE,LOADPCT from stats') as $row) {
+foreach($dbh->query('SELECT DATE,LOADPCT from stats ORDER BY DATE DESC LIMIT 0,25') as $row) {
     $data[] = $row['LOADPCT'];
     $labels[] = date('Hi', $row['DATE']);
 }

@@ -1,7 +1,7 @@
 <?php
 
 try {
-    $dbh = new PDO('mysql:host=localhost;dbname=APCUPS', 'APCUPSStats', 'bm6+h7%w_gn!4');
+    $dbh = new PDO('mysql:host=127.0.0.1;dbname=APCUPS', 'APCUPSStats', 'bm6+h7%w_gn!4');
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();

@@ -15,6 +15,9 @@ foreach($dbh->query('SELECT DATE,LOADPCT from stats ORDER BY DATE DESC LIMIT 0,2
     $labels[] = date('Hi', $row['DATE']);
 }
 
+// Reverse the order of the data
+$data = array_reverse($data);
+$labels = array_reverse($labels);
 
 $chartData = [
     'labels' => $labels,

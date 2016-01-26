@@ -7,6 +7,31 @@ try {
     die();
 }
 
+$graphs = [
+    'load' => [
+        'datasets' => ['LOADPCT']
+    ],
+    'internalTemperature' => [
+        'datasets' => ['ITEMP']
+    ],
+    'lineVoltages' => [
+        'datasets' => ['LINEV', 'OUTPUTV'],
+        'min' => 'LOTRANS',
+        'max' => 'HITRANS'
+    ],
+    'lineFrequency' => [
+        'datasets' => ['LINEFREQ']
+    ],
+    'batteryTime' => [
+        'datasets' => ['TIMELEFT'],
+        'min' => 'MINTIMEL'
+    ],
+    'batteryCharge' => [
+        'datasets' => ['BCHARGE'],
+        'min' => 'MBATTCHG'
+    ],
+];
+
 $data = [];
 $labels = [];
 

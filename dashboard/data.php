@@ -56,7 +56,7 @@ $columnArray = call_user_func_array('array_merge', $graphToDraw);
 
 foreach($dbh->query('SELECT '.implode(',', $columnArray).' FROM stats ORDER BY DATE DESC LIMIT 0,25') as $row) {
 
-    foreach ($graphToDraw['datasets'] as $datasetName) {
+    foreach ($columnArray as $datasetName) {
         $dataPoint = $row[$datasetName];
 
         // Format the DATE data set to dates

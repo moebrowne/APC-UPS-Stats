@@ -37,8 +37,7 @@ $graphs = [
     'batteryCharge' => [
         'datasets' => ['BCHARGE'],
         'limits' => [
-            'min' => 'MBATTCHG',
-            'max' => 'HITRANS'
+            'min' => 'MBATTCHG'
         ],
     ],
 ];

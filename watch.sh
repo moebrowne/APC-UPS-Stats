@@ -55,6 +55,13 @@ inotifywait -e modify -m "$STATUS_FILE" | while read data; do
 	STATUS_DATA['XOFFBATT']=$(date --date="${STATUS_DATA['XOFFBATT']}" +%s)
 	STATUS_DATA['LASTSTEST']=$(date --date="${STATUS_DATA['LASTSTEST']}" +%s)
 
+	# Convert boolean strings to numeric like booleans
+	if [[ "${STATUS_DATA['SELFTEST']}" == 'NO' ]]; then
+		STATUS_DATA['SELFTEST']=0
+	elif [[ "${STATUS_DATA['SELFTEST']}" == 'YES' ]]; then
+		STATUS_DATA['SELFTEST']=1
+	fi
+
 	# Generate a MySQL query to store the data
 	SQLFieldList=''
 	SQLValueList=''

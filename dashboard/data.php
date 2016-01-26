@@ -83,14 +83,17 @@ foreach ($datasets as $datasetName => $dataset) {
         continue;
     }
 
+    // Determine the colour of the data set
+    $datasetColour = ($datasetName === $graphToDraw['limits']['max'] || $datasetName === $graphToDraw['limits']['min']) ? 'rgba(255,187,205,1)':'rgba(220,220,220,1)';
+
     // Add the data set to the graph
     $chartData['datasets'][] =  [
             'fillColor' => "rgba(220,220,220,0.2)",
-            'strokeColor' => "rgba(220,220,220,1)",
-            'pointColor' => "rgba(220,220,220,1)",
+            'strokeColor' => $datasetColour,
+            'pointColor' => $datasetColour,
             'pointStrokeColor' => "#fff",
             'pointHighlightFill' => "#fff",
-            'pointHighlightStroke' => "rgba(220,220,220,1)",
+            'pointHighlightStroke' => $datasetColour,
             'data' => $dataset
         ];
 }

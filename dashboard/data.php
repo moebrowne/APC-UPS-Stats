@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', true);
+//error_reporting(E_ALL);
+//ini_set('display_errors', true);
 
 try {
     $dbh = new PDO('mysql:host=127.0.0.1;dbname=APCUPS', 'APCUPSStats', 'bm6+h7%w_gn!4');
@@ -43,37 +43,56 @@ $graphs = [
     ],
 ];
 
-$graphToDraw = $graphs['lineVoltages'];
+// FIXME: Don't trust the user!
+$graphToDraw = $graphs[$_GET['graphName']];
 
-$data = [];
-$labels = [];
+$datasets = [];
 
 // Add the date column as we will always need it
 array_push($graphToDraw['datasets'], 'DATE');
 
-foreach($dbh->query('SELECT DATE,LOADPCT from stats ORDER BY DATE DESC LIMIT 0,25') as $row) {
-    $data[] = $row['LOADPCT'];
-    $labels[] = date('Hi', $row['DATE']);
+// Get all the columns we need to select
+$columnArray = call_user_func_array('array_merge', $graphToDraw);
+
+foreach($dbh->query('SELECT '.implode(',', $columnArray).' FROM stats ORDER BY DATE DESC LIMIT 0,25') as $row) {
+
+    foreach ($graphToDraw['datasets'] as $datasetName) {
+        $dataPoint = $row[$datasetName];
+
+        // Format the DATE data set to dates
+        if ($datasetName === 'DATE') {
+            $dataPoint = date('Hi', $dataPoint);
+        }
+
+        // Ensure the array exists so we can use array_unshift
+        if (is_array($datasets[$datasetName]) !== true) {
+            $datasets[$datasetName] = [];
+        }
+
+        array_unshift($datasets[$datasetName], $dataPoint);
+    }
 }
 
-// Reverse the order of the data
-$data = array_reverse($data);
-$labels = array_reverse($labels);
+// Add the DATE data to the graph
+$chartData['labels'] = $datasets['DATE'];
 
-$chartData = [
-    'labels' => $labels,
-    'datasets' => [
-        [
+foreach ($datasets as $datasetName => $dataset) {
+
+    // Dont add the DATE data to the datasets
+    if ($datasetName === 'DATE') {
+        continue;
+    }
+
+    // Add the data set to the graph
+    $chartData['datasets'][] =  [
             'fillColor' => "rgba(220,220,220,0.2)",
             'strokeColor' => "rgba(220,220,220,1)",
             'pointColor' => "rgba(220,220,220,1)",
             'pointStrokeColor' => "#fff",
             'pointHighlightFill' => "#fff",
             'pointHighlightStroke' => "rgba(220,220,220,1)",
-            'data' => $data
-            ]
-    ]
-];
+            'data' => $dataset
+        ];
+}
 
 echo json_encode($chartData);
-

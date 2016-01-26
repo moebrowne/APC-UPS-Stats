@@ -48,6 +48,9 @@ $graphToDraw = $graphs['lineVoltages'];
 $data = [];
 $labels = [];
 
+// Add the date column as we will always need it
+array_push($graphToDraw['datasets'], 'DATE');
+
 foreach($dbh->query('SELECT DATE,LOADPCT from stats ORDER BY DATE DESC LIMIT 0,25') as $row) {
     $data[] = $row['LOADPCT'];
     $labels[] = date('Hi', $row['DATE']);

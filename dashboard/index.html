@@ -317,17 +317,14 @@
 
 
 	var loadChart;
+	var lineVoltages;
+
 	$(function(){
 		Chart.defaults.global.animation = false;
 		Chart.defaults.global.responsive = true;
 		Chart.defaults.global.maintainAspectRatio = true;
 
-		var lineVoltages = new Chart($("#lineVoltages")[0].getContext("2d")).Line(lineVoltageData, {
-			pointHitDetectionRadius: 6,
-			datasetFill : false,
-			multiTooltipTemplate: "<%= value %>V"
-		});
-		$.ajax('dashboard/data.php', {
+		$.ajax('dashboard/data.php?graphName=load', {
 			dataType: 'json',
 			complete: function(data) {
 				loadChart = new Chart($("#load")[0].getContext("2d")).Line(data.responseJSON, {
@@ -337,6 +334,17 @@
 					scaleStartValue: 0,
 					scaleSteps: 10,
 					tooltipTemplate: "<%= value %>%"
+				});
+			}
+		});
+
+		$.ajax('dashboard/data.php?graphName=lineVoltages', {
+			dataType: 'json',
+			complete: function(data) {
+				lineVoltages = new Chart($("#lineVoltages")[0].getContext("2d")).Line(data.responseJSON, {
+					pointHitDetectionRadius: 6,
+					datasetFill : false,
+					multiTooltipTemplate: "<%= value %>V"
 				});
 			}
 		});

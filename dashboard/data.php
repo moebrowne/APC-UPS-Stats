@@ -43,6 +43,8 @@ $graphs = [
     ],
 ];
 
+$graphToDraw = $graphs['lineVoltages'];
+
 $data = [];
 $labels = [];
 

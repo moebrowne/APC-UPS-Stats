@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
 try {
     $dbh = new PDO('mysql:host=127.0.0.1;dbname=APCUPS', 'APCUPSStats', 'bm6+h7%w_gn!4');
 } catch (PDOException $e) {
@@ -16,19 +19,27 @@ $graphs = [
     ],
     'lineVoltages' => [
         'datasets' => ['LINEV', 'OUTPUTV'],
-        'min' => 'LOTRANS',
-        'max' => 'HITRANS'
+        'limits' => [
+            'min' => 'LOTRANS',
+            'max' => 'HITRANS'
+        ],
     ],
     'lineFrequency' => [
         'datasets' => ['LINEFREQ']
     ],
     'batteryTime' => [
         'datasets' => ['TIMELEFT'],
-        'min' => 'MINTIMEL'
+        'limits' => [
+            'min' => 'MINTIMEL',
+            'max' => 'HITRANS'
+        ],
     ],
     'batteryCharge' => [
         'datasets' => ['BCHARGE'],
-        'min' => 'MBATTCHG'
+        'limits' => [
+            'min' => 'MBATTCHG',
+            'max' => 'HITRANS'
+        ],
     ],
 ];
 

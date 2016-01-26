@@ -52,7 +52,7 @@
 							Mains Frequency (Hz)
 						</div>
 						<div class="chart-stage">
-							<canvas id="mainsFrequency" class="graph" height="175" width="270"></canvas>
+							<canvas id="lineFrequency" class="graph" height="175" width="270"></canvas>
 						</div>
 						<div class="chart-notes">
 							The frequency of the mains line in
@@ -85,7 +85,7 @@
 							Internal Temperature (°C)
 						</div>
 						<div class="chart-stage">
-							<canvas id="upsTemp" class="graph" height="175" width="270"></canvas>
+							<canvas id="internalTemperature" class="graph" height="175" width="270"></canvas>
 						</div>
 						<div class="chart-notes">
 							The internal temperature of the UPS in degrees C
@@ -100,7 +100,7 @@
 							UPS Time (Minutes)
 						</div>
 						<div class="chart-stage">
-							<canvas id="upsTime" class="graph" height="175" width="270"></canvas>
+							<canvas id="batteryTime" class="graph" height="175" width="270"></canvas>
 						</div>
 						<div class="chart-notes">
 							How long the UPS can supply the current load, and shutdown limit
@@ -188,146 +188,14 @@
 <script src="/node_modules/chart.js/Chart.min.js"></script>
 <script>
 
-	var randomScalingFactor = function(){ return Math.round((Math.random()+230)*10)/10};
+	var loadChart,lineVoltages,batteryCharge,lineFrequency,internalTemperature;
 
-	var lineVoltageData = {
-		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
-		datasets : [
-			{
-				label: "Line In",
-				fillColor : "rgba(220,220,220,0.2)",
-				strokeColor : "rgba(220,220,220,1)",
-				pointColor : "rgba(220,220,220,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(220,220,220,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			},
-			{
-				label: "Line Out",
-				fillColor : "rgba(220,220,220,0.2)",
-				strokeColor : "rgba(220,220,220,1)",
-				pointColor : "rgba(220,220,220,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(220,220,220,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			},
-			{
-				fillColor : "rgba(151,187,205,0)",
-				strokeColor : "rgba(255,187,205,1)",
-				pointColor : "rgba(255,187,205,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253,253]
-			},
-			{
-				fillColor : "rgba(151,187,205,0)",
-				strokeColor : "rgba(255,187,205,1)",
-				pointColor : "rgba(255,187,205,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208,208]
-			}
-		]
-	};
-	var randomScalingFactor = function(){ return Math.round(Math.random()*20)+24};
-	var batteryChargeData = {
-		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
-		datasets : [
-			{
-				label: "Battery Charge",
-				fillColor : "rgba(220,220,220,0.2)",
-				strokeColor : "rgba(220,220,220,1)",
-				pointColor : "rgba(220,220,220,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(220,220,220,1)",
-				data : [100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100]
-			},
-			{
-				fillColor : "rgba(151,187,205,0)",
-				strokeColor : "rgba(255,187,205,1)",
-				pointColor : "rgba(255,187,205,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
-			}
-		]
-	};
-	var upsTimeData = {
-		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
-		datasets : [
-			{
-				label: "UPS Time",
-				fillColor : "rgba(220,220,220,0.2)",
-				strokeColor : "rgba(220,220,220,1)",
-				pointColor : "rgba(220,220,220,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(220,220,220,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			},
-			{
-				fillColor : "rgba(151,187,205,0)",
-				strokeColor : "rgba(255,187,205,1)",
-				pointColor : "rgba(255,187,205,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]
-			}
-		]
-	};
-
-	var lineChartData = {
-		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
-		datasets : [
-			{
-				label: "My First dataset",
-				fillColor : "rgba(220,220,220,0.2)",
-				strokeColor : "rgba(220,220,220,1)",
-				pointColor : "rgba(220,220,220,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(220,220,220,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			}
-		]
-	};
-
-	var mainsFrequencyData = {
-		labels : ["1001","1002","1003","1004","1005","1006","1007","1008","1009","1010","1011","1012","1013","1014","1015","1016","1017","1018","1019","1020","1021"],
-		datasets : [
-			{
-				label: "My First dataset",
-				fillColor : "rgba(220,220,220,0.2)",
-				strokeColor : "rgba(220,220,220,1)",
-				pointColor : "rgba(220,220,220,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
-				pointHighlightStroke : "rgba(220,220,220,1)",
-				data : [50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50]
-			}
-		]
-	};
-
-
-	var loadChart;
 	$(function(){
 		Chart.defaults.global.animation = false;
 		Chart.defaults.global.responsive = true;
 		Chart.defaults.global.maintainAspectRatio = true;
 
-		var lineVoltages = new Chart($("#lineVoltages")[0].getContext("2d")).Line(lineVoltageData, {
-			pointHitDetectionRadius: 6,
-			datasetFill : false,
-			multiTooltipTemplate: "<%= value %>V"
-		});
-		$.ajax('dashboard/data.php', {
+		$.ajax('dashboard/data.php?graphName=load', {
 			dataType: 'json',
 			complete: function(data) {
 				loadChart = new Chart($("#load")[0].getContext("2d")).Line(data.responseJSON, {
@@ -341,38 +209,69 @@
 			}
 		});
 
-		var batteryCharge = new Chart($("#batteryCharge")[0].getContext("2d")).Line(batteryChargeData, {
-			pointHitDetectionRadius: 6,
-			scaleOverride: true,
-			scaleStepWidth: 10,
-			scaleStartValue: 0,
-			scaleSteps: 10,
-			datasetFill : false,
-			tooltipTemplate: "<%= value %>%"
+		$.ajax('dashboard/data.php?graphName=lineVoltages', {
+			dataType: 'json',
+			complete: function(data) {
+				lineVoltages = new Chart($("#lineVoltages")[0].getContext("2d")).Line(data.responseJSON, {
+					pointHitDetectionRadius: 6,
+					datasetFill : false,
+					multiTooltipTemplate: "<%= value %>V"
+				});
+			}
 		});
 
-		var mainsFrequency = new Chart($("#mainsFrequency")[0].getContext("2d")).Line(mainsFrequencyData, {
-			pointHitDetectionRadius: 6,
-			scaleOverride: true,
-			scaleStepWidth: 2,
-			scaleStartValue: 40,
-			scaleSteps: 10,
-			tooltipTemplate: "<%= value %>Hz"
+		$.ajax('dashboard/data.php?graphName=batteryCharge', {
+			dataType: 'json',
+			complete: function(data) {
+				batteryCharge = new Chart($("#batteryCharge")[0].getContext("2d")).Line(data.responseJSON, {
+					pointHitDetectionRadius: 6,
+					scaleOverride: true,
+					scaleStepWidth: 10,
+					scaleStartValue: 0,
+					scaleSteps: 10,
+					datasetFill : false,
+					tooltipTemplate: "<%= value %>%"
+				});
+			}
 		});
 
-		var upsTime = new Chart($("#upsTime")[0].getContext("2d")).Line(upsTimeData, {
-			pointHitDetectionRadius: 6,
-			scaleOverride: true,
-			scaleStepWidth: 5,
-			scaleStartValue: 0,
-			scaleSteps: 12,
-			datasetFill : false,
-			multiTooltipTemplate: "<%= value %> mins"
+		$.ajax('dashboard/data.php?graphName=lineFrequency', {
+			dataType: 'json',
+			complete: function(data) {
+				lineFrequency = new Chart($("#lineFrequency")[0].getContext("2d")).Line(data.responseJSON, {
+					pointHitDetectionRadius: 6,
+					scaleOverride: true,
+					scaleStepWidth: 2,
+					scaleStartValue: 40,
+					scaleSteps: 10,
+					tooltipTemplate: "<%= value %>Hz"
+				});
+			}
 		});
 
-		var upsTemp = new Chart($("#upsTemp")[0].getContext("2d")).Line(lineChartData, {
-			pointHitDetectionRadius: 6,
-			tooltipTemplate: "<%= value %>°C"
+		$.ajax('dashboard/data.php?graphName=batteryTime', {
+			dataType: 'json',
+			complete: function(data) {
+				lineFrequency = new Chart($("#batteryTime")[0].getContext("2d")).Line(data.responseJSON, {
+					pointHitDetectionRadius: 6,
+					scaleOverride: true,
+					scaleStepWidth: 5,
+					scaleStartValue: 0,
+					scaleSteps: 12,
+					datasetFill : false,
+					multiTooltipTemplate: "<%= value %> mins"
+				});
+			}
+		});
+
+		$.ajax('dashboard/data.php?graphName=internalTemperature', {
+			dataType: 'json',
+			complete: function(data) {
+				lineFrequency = new Chart($("#internalTemperature")[0].getContext("2d")).Line(data.responseJSON, {
+					pointHitDetectionRadius: 6,
+					tooltipTemplate: "<%= value %>°C"
+				});
+			}
 		});
 	});
 </script>

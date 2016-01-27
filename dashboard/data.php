@@ -31,7 +31,6 @@ $graphs = [
         'datasets' => ['TIMELEFT'],
         'limits' => [
             'min' => 'MINTIMEL',
-            'max' => 'HITRANS'
         ],
     ],
     'batteryCharge' => [

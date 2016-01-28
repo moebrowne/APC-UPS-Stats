@@ -41,10 +41,14 @@ $graphs = [
     ],
 ];
 
-// FIXME: Don't trust the user!
-$graphToDraw = $graphs[$_GET['graphName']];
+// Check the graph exists
+if (array_key_exists($_GET['graphName'], $graphs) !== true) {
+    throw new Exception('Unknown Graph "'.$_GET['graphName'].'"');
+}
 
 $datasets = [];
+
+$graphToDraw = $graphs[$_GET['graphName']];
 
 // Add the date column as we will always need it
 array_push($graphToDraw['datasets'], 'DATE');

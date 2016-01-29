@@ -2,8 +2,7 @@
 
 . ./libs/md5sum.sh
 
-#STATUS_FILE=/var/log/apcupsd.status
-STATUS_FILE=./apcupsd.status
+STATUS_FILE=/var/log/apcupsd.status
 STATUS_FILE_HASH=$(hashFile "$STATUS_FILE")
 
 SQL_USER='APCUPSStats'

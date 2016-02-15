@@ -180,6 +180,21 @@
 		var date = new Date(data.DATE * 1000).format('Hi');
 		loadChart.removeData();
 		loadChart.addData([parseInt(data.LOADPCT,10)], date);
+
+		lineVoltages.removeData();
+		lineVoltages.addData([parseFloat(data.LINEV), parseFloat(data.OUTPUTV), parseFloat(data.LOTRANS), parseFloat(data.HITRANS)], date);
+
+		batteryCharge.removeData();
+		batteryCharge.addData([parseFloat(data.BCHARGE), parseFloat(data.MBATTCHG)], date);
+
+		lineFrequency.removeData();
+		lineFrequency.addData([parseFloat(data.LINEFREQ)], date);
+
+		batteryTime.removeData();
+		batteryTime.addData([parseFloat(data.TIMELEFT), parseFloat(data.MINTIMEL)], date);
+
+		internalTemperature.removeData();
+		internalTemperature.addData([parseFloat(data.ITEMP)], date);
 	});
 
 </script>

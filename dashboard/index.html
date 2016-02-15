@@ -115,10 +115,10 @@
 							UPS Details
 						</div>
 						<div class="chart-stage">
-							Firmware: 651.18.I USB FW:7.3<br>
-							Version: 3.14.12 (29 March 2014) redhat<br>
-							Up since: 2015-12-12 17:41:08 +0000<br>
-							Serial Number: AS0837140969<br>
+							Firmware: <span id="detail-firmware">???</span><br>
+							Version: <span id="detail-version">???</span><br>
+							Up since: <span id="detail-upsince">???</span><br>
+							Serial Number: <span id="detail-serialNo">???</span><br>
 						</div>
 					</div>
 				</div>
@@ -195,6 +195,11 @@
 
 		internalTemperature.removeData();
 		internalTemperature.addData([parseFloat(data.ITEMP)], date);
+
+		$('#detail-firmware').html(data.FIRMWARE);
+		$('#detail-version').html(data.VERSION);
+		//$('#detail-upsince').html(data.FIRMWARE);
+		$('#detail-serialNo').html(data.SERIALNO);
 	});
 
 </script>

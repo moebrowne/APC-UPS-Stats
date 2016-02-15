@@ -188,7 +188,7 @@
 <script src="/node_modules/chart.js/Chart.min.js"></script>
 <script>
 
-	var loadChart,lineVoltages,batteryCharge,lineFrequency,internalTemperature;
+	var loadChart,lineVoltages,batteryCharge,lineFrequency,batteryTime,internalTemperature;
 
 	$(function(){
 		Chart.defaults.global.animation = false;
@@ -252,7 +252,7 @@
 		$.ajax('dashboard/data.php?graphName=batteryTime', {
 			dataType: 'json',
 			complete: function(data) {
-				lineFrequency = new Chart($("#batteryTime")[0].getContext("2d")).Line(data.responseJSON, {
+				batteryTime = new Chart($("#batteryTime")[0].getContext("2d")).Line(data.responseJSON, {
 					pointHitDetectionRadius: 6,
 					scaleOverride: true,
 					scaleStepWidth: 5,
@@ -267,7 +267,7 @@
 		$.ajax('dashboard/data.php?graphName=internalTemperature', {
 			dataType: 'json',
 			complete: function(data) {
-				lineFrequency = new Chart($("#internalTemperature")[0].getContext("2d")).Line(data.responseJSON, {
+				internalTemperature = new Chart($("#internalTemperature")[0].getContext("2d")).Line(data.responseJSON, {
 					pointHitDetectionRadius: 6,
 					tooltipTemplate: "<%= value %>°C"
 				});
